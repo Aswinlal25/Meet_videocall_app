@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "193924056214",
+    "project_id": "project-meet-basic",
+    "storage_bucket": "project-meet-basic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193924056214:android:ae726a17d7cb7267b26eb7",
+        "android_client_info": {
+          "package_name": "com.example.meet_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC24DbD6MOVt8O11te77MR1skLrgoz-rkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
