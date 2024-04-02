@@ -174,7 +174,7 @@ class LoginScreen extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           AuthApi authApi = AuthApi();
-                          authApi.signWithGoogle();
+                          authApi.signWithGoogle(context);
                         },
                         child: Container(
                             height: screenSize.height * 0.07,

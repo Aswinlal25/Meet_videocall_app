@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/models/auth/auth_functions.dart';
 import 'package:meet_up/view/Utile/colors.dart';
 import 'package:meet_up/view/Utile/constants.dart';
+// import 'package:meet_up/view/screens/user_create_screen/user_create_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   final Function()? onTap;
@@ -244,47 +245,6 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       kheight20,
-                      // Container(
-                      //   height: screenSize.height * 0.07,
-                      //   width: screenSize.width * 0.9,
-                      //   child: TextFormField(
-                      //     obscureText: true,
-                      //     validator: (val) => val != null && val.isNotEmpty
-                      //         ? null
-                      //         : 'Required Field',
-                      //     decoration: const InputDecoration(
-                      //         enabledBorder: OutlineInputBorder(
-                      //           borderRadius:
-                      //               BorderRadius.all(Radius.circular(40)),
-                      //           borderSide: BorderSide(
-                      //             color: Colors
-                      //                 .white30, // Border color in normal state
-                      //             width: 2.0,
-                      //           ),
-                      //         ),
-                      //         focusedBorder: OutlineInputBorder(
-                      //           borderRadius:
-                      //               BorderRadius.all(Radius.circular(40)),
-                      //           borderSide: BorderSide(
-                      //             color: Colors
-                      //                 .white, // Border color in focused state
-                      //             width: 2.0,
-                      //           ),
-                      //         ),
-                      //         hintText: 'Conform Password',
-                      //         hintStyle: TextStyle(
-                      //           color: Colors.white60,
-                      //           letterSpacing: 2,
-                      //           fontSize: 15,
-                      //         ),
-                      //         prefixIcon: Icon(
-                      //           Icons.password,
-                      //           color: Colors.white60,
-                      //           size: 20,
-                      //         )),
-                      //     style: const TextStyle(color: Colors.white),
-                      //   ),
-                      // ),
                       kheight15,
                       Align(
                         alignment: Alignment.center,
@@ -320,9 +280,14 @@ class SignUpScreen extends StatelessWidget {
                           AuthApi authApi = AuthApi();
 
                           authApi.createUser(
+                              context: context,
                               username: _nameController.text.trim(),
                               email: _emailController.text.trim(),
                               password: _passwordController.text.trim());
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (_) => UserCreateScreen()));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: kamber,

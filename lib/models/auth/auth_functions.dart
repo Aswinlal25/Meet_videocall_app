@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meet_up/models/current_user_model.dart';
+import 'package:meet_up/view/screens/user_create_screen/user_create_screen.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 UserModel? userModel;
 
@@ -31,7 +33,7 @@ class AuthApi {
     }
   }
 
-  void createUser({email, password, username}) async {
+  Future<bool> createUser({email, password, username, context}) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -42,22 +44,28 @@ class AuthApi {
         'image': '',
         'email': email,
       }).then((_) => print('User added to Firestore successfully!'));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => UserCreateScreen()));
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('------The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         print('------The account already exists for that email.');
       }
+      return false;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
   void logout() async {
     await FirebaseAuth.instance.signOut();
+    ZegoUIKitPrebuiltCallInvitationService().uninit();
   }
 
-  signWithGoogle() async {
+  signWithGoogle(context) async {
     try {
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -85,6 +93,8 @@ class AuthApi {
           'image': '',
           'email': email,
         }).then((_) => print('User added to Firestore successfully!'));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => UserCreateScreen()));
       } else {
         print('Document already exists for current user.');
       }
@@ -173,4 +183,23 @@ void getUserDetails() async {
   } else {
     print('No user signed in.');
   }
+}
+
+Future<List<UserModel>> getAllUsers() async {
+  List<UserModel> users = [];
+  try {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection("users").get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      users = querySnapshot.docs.map((doc) {
+        return UserModel.fromJson(doc.id, doc.data() as Map<String, dynamic>);
+      }).toList();
+    } else {
+      print("No users found.");
+    }
+  } catch (error) {
+    print("Error getting users: $error");
+  }
+  return users;
 }

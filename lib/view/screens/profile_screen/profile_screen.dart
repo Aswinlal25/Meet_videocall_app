@@ -296,30 +296,29 @@
 
 // ignore_for_file: deprecated_member_use
 
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:meet_up/models/current_user_model.dart';
 import 'package:meet_up/view/Utile/colors.dart';
 import 'package:meet_up/view/Utile/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meet_up/view/Utile/dialog_box/logout.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:meet_up/view/Utile/photoview_page/image_view.dart';
 import 'package:meet_up/view/screens/profile_edit_page/profile_edit_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String name;
   final String email;
   final String image;
+  final String about;
 
   const ProfileScreen({
     Key? key,
     required this.name,
     required this.email,
     required this.image,
+    required this.about,
   }) : super(key: key);
 
   @override
@@ -334,24 +333,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
 
     getUserDetails();
-  }
-
-  XFile? _image;
-
-  // Function to pick an image from the gallery
-  Future<void> pickImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      setState(() {
-        _image = pickedImage;
-      });
-
-      // Upload image to Firebase Storage
-      await uploadImageToFirebaseStorage(File(_image!.path));
-    }
   }
 
   void getUserDetails() async {
@@ -377,39 +358,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } else {
       print('No user signed in.');
-    }
-  }
-
-  Future<void> uploadImageToFirebaseStorage(File imageFile) async {
-    try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(fileName);
-      firebase_storage.UploadTask uploadTask = ref.putFile(imageFile);
-      firebase_storage.TaskSnapshot snapshot = await uploadTask;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-
-      // Update the user's document in Firestore with the image URL
-      await updateUserProfileImage(downloadUrl);
-    } catch (error) {
-      print('Error uploading image: $error');
-    }
-  }
-
-  Future<void> updateUserProfileImage(String imageUrl) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      String currentUserUid = user.uid;
-
-      // Update the user's profile image URL in Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUserUid)
-          .update({'image': imageUrl});
-
-      print('Profile image updated successfully!');
     }
   }
 
@@ -480,6 +428,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.white70,
                             fontWeight: FontWeight.w700,
                             fontSize: 29,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        Text(
+                          widget.about,
+                          //'${userModel?.username}',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
                             letterSpacing: 1,
                           ),
                         ),
@@ -576,9 +534,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             top: 110,
             left: 55,
             child: InkWell(
-              onDoubleTap: () {},
               onTap: () {
-                pickImage();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ImageView(userimage: widget.image)));
               },
               child: Container(
                 width: 180,
@@ -598,44 +558,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Center(
                       child: Hero(
                         tag: 'currentUserPicture',
-                        child: _image != null
+                        child: userModel != null &&
+                                userModel!.image != null &&
+                                userModel!.image!.isNotEmpty
                             ? Container(
                                 width: 170,
                                 height: 170,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
                                   image: DecorationImage(
-                                    image: FileImage(File(_image!.path)),
+                                    image: NetworkImage(widget.image),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               )
-                            : userModel != null &&
-                                    userModel!.image != null &&
-                                    userModel!.image!.isNotEmpty
-                                ? Container(
-                                    width: 170,
-                                    height: 170,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      image: DecorationImage(
-                                        image: NetworkImage(widget.image),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 170,
-                                    height: 170,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            'asset/placeholderimage.webp'),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                            : Container(
+                                width: 170,
+                                height: 170,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'asset/placeholderimage.webp'),
+                                    fit: BoxFit.cover,
                                   ),
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -687,8 +635,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 231,
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => EditProfileScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => EditProfileScreen()),
+                  ).then((value) {
+                    if (value != null && value == true) {
+                      // Fetch updated user details
+                      getUserDetails();
+                    }
+                  });
                 },
                 child: CircleAvatar(
                   backgroundColor: kblack,

@@ -1,22 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/view/Utile/colors.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class OtherUsersDialog extends StatefulWidget {
-  const OtherUsersDialog({Key? key, required image}) : super(key: key);
+  final String? id;
+  final String? image;
+  final String? username;
+  final String? about;
+  const OtherUsersDialog(
+      {Key? key, required this.image, this.username, this.about, this.id})
+      : super(key: key);
 
   @override
   State<OtherUsersDialog> createState() => _OtherUsersDialogState();
 }
 
 class _OtherUsersDialogState extends State<OtherUsersDialog> {
-  String? image;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: kblack,
       child: Container(
+        width: 380,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: kdark,
@@ -36,27 +42,58 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                'asset/parathy1.jpg',
-                              ))),
+                            fit: BoxFit.cover,
+                            image: NetworkImage(widget.image!),
+                          )),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black,
+                              Colors.black,
+                              Colors.black.withOpacity(0.9),
+                              Colors.black.withOpacity(0.7),
+                              Colors.black.withOpacity(0.4),
+                              Colors.transparent,
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 150,
-                  left: 10,
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: Center(
-                      child: Text(
-                        'Parvathy',
-                        style: TextStyle(
-                            color: Colors.white,
-                            letterSpacing: 4,
-                            fontSize: 35,
-                            fontWeight: FontWeight.w300),
-                      ),
+                  bottom: 120,
+                  left: 30,
+                  child: Center(
+                    child: Text(
+                      widget.username!,
+                      style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 4,
+                          fontSize: 35,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 100,
+                  left: 30,
+                  child: Container(
+                    width: 250,
+                    child: Text(
+                      widget.about!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300),
                     ),
                   ),
                 ),
@@ -84,20 +121,39 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: kgrey,
-                          radius: 30,
-                          child: Center(
-                            child:
-                                Icon(CupertinoIcons.phone_fill, color: kgreen),
+                        InkWell(
+                          onTap: () {
+                            print('Button pressed---->>');
+                            ZegoSendCallInvitationButton(
+                              isVideoCall: true,
+                              resourceID:
+                                  "Meet_call", //You need to use the resourceID that you created in the subsequent steps. Please continue reading this document.
+                              invitees: [
+                                ZegoUIKitUser(
+                                  id: widget.id!,
+                                  name: widget.username!,
+                                ),
+                              ],
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: kgrey,
+                            radius: 30,
+                            child: Center(
+                              child: Icon(CupertinoIcons.phone_fill,
+                                  color: kgreen),
+                            ),
                           ),
                         ),
-                        CircleAvatar(
-                          backgroundColor: kgrey,
-                          radius: 30,
-                          child: Center(
-                            child: Icon(CupertinoIcons.video_camera_solid,
-                                color: kred),
+                        InkWell(
+                          onTap: () {},
+                          child: CircleAvatar(
+                            backgroundColor: kgrey,
+                            radius: 30,
+                            child: Center(
+                              child: Icon(CupertinoIcons.video_camera_solid,
+                                  color: kred),
+                            ),
                           ),
                         ),
                       ],
@@ -112,3 +168,20 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
     );
   }
 }
+//  Positioned(
+//                   top: 150,
+//                   left: 10,
+//                   child: RotatedBox(
+//                     quarterTurns: 3,
+//                     child: Center(
+//                       child: Text(
+//                         widget.username!,
+//                         style: TextStyle(
+//                             color: Colors.white,
+//                             letterSpacing: 4,
+//                             fontSize: 35,
+//                             fontWeight: FontWeight.w300),
+//                       ),
+//                     ),
+//                   ),
+//                 ),

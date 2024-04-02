@@ -40,6 +40,10 @@ dependencies:
   cloud_firestore: ^4.15.3
   google_sign_in: ^6.2.1
   image_picker: ^1.0.7
+  lottie: ^3.1.0
+  zego_uikit_prebuilt_call: ^4.5.3
+  zego_uikit_signaling_plugin: ^2.7.6
+  zego_express_engine: ^3.13.2
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +89,8 @@ flutter:
     - asset\parvathy4.jpg
     - asset\photo_2024-02-08_21-20-18.jpg
     - asset\parathy1.jpg
+
+    - asset\animations\Animation - 1711825028881.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -3,7 +3,9 @@ import 'package:meet_up/view/screens/login_screen/login.dart';
 import 'package:meet_up/view/screens/sign_up_screen.dart/signUp.dart';
 
 class LoginOrSignUpPage extends StatefulWidget {
-  const LoginOrSignUpPage({super.key});
+  const LoginOrSignUpPage({
+    super.key,
+  });
 
   @override
   State<LoginOrSignUpPage> createState() => _LoginOrSignUpPageState();
