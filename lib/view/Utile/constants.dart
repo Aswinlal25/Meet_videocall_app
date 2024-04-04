@@ -26,24 +26,65 @@ const SizedBox kwith5 = SizedBox(
   width: 5,
 );
 
+// void showCustomSnackbar(BuildContext context, String message) {
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//       backgroundColor: kgrey,
+//       content: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Row(
+//           children: [
+//             Icon(CupertinoIcons.check_mark, color: kgreen),
+//             SizedBox(width: 10),
+//             Text(
+//               message,
+//               style: TextStyle(color: kwhite),
+//             ),
+//           ],
+//         ),
+//       ),
+//       duration: Duration(seconds: 2), // Adjust the duration as needed
+//     ),
+//   );
+// }
 void showCustomSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: kgrey,
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: Container(
+        //width: 450,
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: kgrey,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: Row(
           children: [
-            Icon(CupertinoIcons.check_mark, color: kgreen),
+            Icon(
+              CupertinoIcons.check_mark,
+              color: kgreen,
+            ),
             SizedBox(width: 10),
-            Text(
-              message,
-              style: TextStyle(color: kwhite),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: kwhite),
+              ),
             ),
           ],
         ),
       ),
-      duration: Duration(seconds: 2), // Adjust the duration as needed
+      behavior: SnackBarBehavior.floating,
+      duration: Duration(seconds: 2),
     ),
   );
 }

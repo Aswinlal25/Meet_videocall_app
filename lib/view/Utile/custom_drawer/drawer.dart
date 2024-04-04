@@ -26,48 +26,47 @@ class MyDrawer extends StatelessWidget {
                           bottomRight: Radius.circular(40),
                         ),
                         image: DecorationImage(
-                            image: AssetImage(
-                                'asset/Council Post_ What Are Chatbots, And How Can Home Service Providers Use Them_.jpeg'),
+                            image: AssetImage('asset/deawer_background.jpeg'),
                             fit: BoxFit.cover)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'M',
-                                style: TextStyle(
-                                  color: kwhite,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 30,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'E',
-                                style: TextStyle(
-                                  color: Colors.yellow,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 35,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'ET',
-                                style: TextStyle(
-                                  color: kwhite,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 30,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // child: Padding(
+                    //   padding: const EdgeInsets.all(15),
+                    //   child: Align(
+                    //     alignment: Alignment.bottomLeft,
+                    //     child: RichText(
+                    //       text: TextSpan(
+                    //         children: [
+                    //           TextSpan(
+                    //             text: 'M',
+                    //             style: TextStyle(
+                    //               color: kwhite,
+                    //               fontWeight: FontWeight.w800,
+                    //               fontSize: 30,
+                    //               letterSpacing: 4,
+                    //             ),
+                    //           ),
+                    //           TextSpan(
+                    //             text: 'E',
+                    //             style: TextStyle(
+                    //               color: Colors.yellow,
+                    //               fontWeight: FontWeight.w800,
+                    //               fontSize: 35,
+                    //               letterSpacing: 4,
+                    //             ),
+                    //           ),
+                    //           TextSpan(
+                    //             text: 'ET',
+                    //             style: TextStyle(
+                    //               color: kwhite,
+                    //               fontWeight: FontWeight.w800,
+                    //               fontSize: 30,
+                    //               letterSpacing: 4,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                   SizedBox(
                     height: 30,

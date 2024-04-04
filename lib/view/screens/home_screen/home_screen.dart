@@ -1,5 +1,4 @@
-// ignore_for_file: deprecated_member_use
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: deprecated_member_use, unused_element
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/models/auth/auth_functions.dart';
@@ -26,17 +25,36 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isSearchCClicked = false;
   List<UserModel> allUsers = [];
   List<UserModel> filteredUsers = [];
+  @override
+  void setState(VoidCallback fn) {
+    getUserDetails();
+    super.setState(fn);
+  }
 
   @override
   void initState() {
     super.initState();
     fetchUsers();
-    getUserDetails();
-    onUserLogin();
+
+    initailizeZegoCloud();
+  }
+
+  void initailizeZegoCloud() {
+    if (userModel != null) {
+      print(
+          '======================================Initializing Zego Cloud SDK...');
+      setState(() {
+        onUserLogin();
+      });
+    } else {
+      print('User model is null. Cannot initialize Zego Cloud SDK.');
+    }
   }
 
   void onUserLogin() {
+    print('Executing onUserLogin...');
     if (userModel != null) {
+      print('User model is not null. Initializing Zego Cloud SDK...');
       ZegoUIKitPrebuiltCallInvitationService().init(
         appID: 687637959,
         appSign:
@@ -45,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
         userName: userModel!.username,
         plugins: [ZegoUIKitSignalingPlugin()],
       );
+    } else {
+      print('User model is null. Cannot initialize Zego Cloud SDK.');
     }
   }
 
@@ -75,6 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      onUserLogin();
+    });
+
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
@@ -284,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : SizedBox(),
                   Container(
                     width: double.infinity,
-                    height: screenSize.height * 0.83,
+                    height: screenSize.height * 0.78,
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -295,6 +319,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: filteredUsers.length,
                       itemBuilder: (context, index) {
                         UserModel user = filteredUsers[index];
+                        ZegoSendCallInvitationButton actionButton(
+                                bool isVideo) =>
+                            ZegoSendCallInvitationButton(
+                              resourceID: 'Meet_call',
+                              isVideoCall: isVideo,
+                              invitees: [
+                                ZegoUIKitUser(id: user.id, name: user.username)
+                              ],
+                            );
 
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -312,78 +345,111 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               );
                             },
-                            child: Hero(
-                              tag: 'image$index',
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: NetworkImage(user.image!),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Container(
+                            child: Stack(
+                              children: [
+                                Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.black.withOpacity(0.8),
-                                        Colors.black.withOpacity(0.7),
-                                        Colors.black.withOpacity(0.4),
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
+                                    image: DecorationImage(
+                                      image: NetworkImage(user.image!),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Row(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.black.withOpacity(0.8),
+                                          Colors.black.withOpacity(0.7),
+                                          Colors.black.withOpacity(0.4),
+                                          Colors.transparent,
+                                          Colors.transparent,
+                                          Colors.transparent,
+                                        ],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Column(
+                                        // crossAxisAlignment:
+                                        //     CrossAxisAlignment.start,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.end,
                                         children: [
-                                          CircleAvatar(
-                                            backgroundColor: kgrey,
-                                            radius: 23,
-                                            child: Center(
-                                              child: Icon(
-                                                CupertinoIcons.phone_fill,
-                                                color: kgreen,
-                                              ),
-                                            ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              // CircleAvatar(
+                                              //   backgroundColor: kgrey,
+                                              //   radius: 23,
+                                              //   child: Center(
+                                              //     child: Icon(
+                                              //       CupertinoIcons.phone_fill,
+                                              //       color: kgreen,
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                              // SizedBox(width: 10),
+                                              // CircleAvatar(
+                                              //   backgroundColor: kgrey,
+                                              //   radius: 23,
+                                              //   child: Center(
+                                              //     child: Icon(
+                                              //       CupertinoIcons
+                                              //           .video_camera_solid,
+                                              //       color: kred,
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                            ],
                                           ),
-                                          SizedBox(width: 10),
-                                          CircleAvatar(
-                                            backgroundColor: kgrey,
-                                            radius: 23,
-                                            child: Center(
-                                              child: Icon(
-                                                CupertinoIcons
-                                                    .video_camera_solid,
-                                                color: kred,
-                                              ),
-                                            ),
+                                          //kheight10,
+                                          Container(
+                                            height: 33,
+                                            width: 210,
+                                            decoration: BoxDecoration(
+                                                // color: kdark,
+                                                color: Colors.transparent,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20))),
+                                            child: Center(),
                                           ),
+                                          kheight10,
                                         ],
                                       ),
-                                      kheight10,
-                                      Text(
-                                        user.username,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          letterSpacing: 2.5,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      kheight5,
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Positioned(
+                                    right: 109,
+                                    bottom: 19,
+                                    child: Container(
+                                      width: 40,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                          color:
+                                              Color.fromARGB(135, 255, 193, 7)),
+                                    )),
+                                Positioned(
+                                  bottom: 16,
+                                  left: 40,
+                                  child: Text(
+                                    user.username,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        letterSpacing: 1,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         );

@@ -36,7 +36,7 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Hero(
-                    tag: 'image',
+                    tag: 'photo',
                     child: Container(
                       height: 450,
                       decoration: BoxDecoration(
@@ -80,6 +80,17 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
                     ),
                   ),
                 ),
+                // Positioned(
+                //     top: 20,
+                //     left: 30,
+                //     child: Container(
+                //       width: 150, // Adjust width as needed
+                //       height: 50, // Adjust height as needed
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(15.0),
+                //         border: Border.all(color: kamber, width: 3),
+                //       ),
+                //     )),
                 Positioned(
                   bottom: 100,
                   left: 30,
@@ -110,52 +121,29 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
                       ),
                     )),
                 Positioned(
-                  bottom: 20,
+                  bottom: 10,
                   left: 40,
                   child: Container(
-                    height: 80,
-                    width: 230,
+                    height: 90,
+                    width: 240,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.transparent),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            print('Button pressed---->>');
-                            ZegoSendCallInvitationButton(
-                              isVideoCall: true,
-                              resourceID:
-                                  "Meet_call", //You need to use the resourceID that you created in the subsequent steps. Please continue reading this document.
-                              invitees: [
-                                ZegoUIKitUser(
-                                  id: widget.id!,
-                                  name: widget.username!,
-                                ),
-                              ],
-                            );
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: kgrey,
-                            radius: 30,
-                            child: Center(
-                              child: Icon(CupertinoIcons.phone_fill,
-                                  color: kgreen),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: CircleAvatar(
-                            backgroundColor: kgrey,
-                            radius: 30,
-                            child: Center(
-                              child: Icon(CupertinoIcons.video_camera_solid,
-                                  color: kred),
-                            ),
-                          ),
-                        ),
+                        Container(
+                            height: 110, width: 50, child: actionButton(false)),
+                        Container(
+                            height: 110, width: 50, child: actionButton(true)),
+                        // CircleAvatar(
+                        //   backgroundColor: kgrey,
+                        //   radius: 30,
+                        //   child: Center(
+                        //     child: Icon(CupertinoIcons.video_camera_solid,
+                        //         color: kred),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -167,6 +155,12 @@ class _OtherUsersDialogState extends State<OtherUsersDialog> {
       ),
     );
   }
+
+  ZegoSendCallInvitationButton actionButton(bool isVideo) =>
+      ZegoSendCallInvitationButton(
+          invitees: [ZegoUIKitUser(id: widget.id!, name: widget.username!)],
+          resourceID: 'Meet_call',
+          isVideoCall: isVideo);
 }
 //  Positioned(
 //                   top: 150,

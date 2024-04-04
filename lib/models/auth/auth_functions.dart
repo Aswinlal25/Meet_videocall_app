@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meet_up/models/current_user_model.dart';
 import 'package:meet_up/view/screens/user_create_screen/user_create_screen.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 UserModel? userModel;
 
@@ -15,6 +16,7 @@ class AuthApi {
         email: email,
         password: password,
       );
+      onUserLogin();
     } on FirebaseAuthException catch (e) {
       String errorMsg;
       if (e.code == 'user-not-found') {
@@ -33,6 +35,21 @@ class AuthApi {
     }
   }
 
+  void onUserLogin() {
+    print('it zegocloud function in called!!!');
+    if (userModel != null) {
+      print('----------------------it zegocloud function in called!!!');
+      ZegoUIKitPrebuiltCallInvitationService().init(
+        appID: 687637959,
+        appSign:
+            "f03e62d0c1d7469ddb2211b4b44a3143199e5dfa18b6c16f3907800182feeecd",
+        userID: userModel!.id,
+        userName: userModel!.username,
+        plugins: [ZegoUIKitSignalingPlugin()],
+      );
+    }
+  }
+
   Future<bool> createUser({email, password, username, context}) async {
     try {
       await FirebaseAuth.instance
@@ -44,6 +61,7 @@ class AuthApi {
         'image': '',
         'email': email,
       }).then((_) => print('User added to Firestore successfully!'));
+      onUserLogin();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => UserCreateScreen()));
       return true;
@@ -93,6 +111,7 @@ class AuthApi {
           'image': '',
           'email': email,
         }).then((_) => print('User added to Firestore successfully!'));
+        onUserLogin();
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => UserCreateScreen()));
       } else {
